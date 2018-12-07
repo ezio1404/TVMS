@@ -6,11 +6,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="TVMS-Traffic Violation And Management System">
+    <meta name="author" content="Potot,EJ Anton S.">
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
-
+    <title>TVMS</title>
+    <link rel="icon" href="../dist/images/tvms-1.png"  > 
+    
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -20,11 +21,12 @@
     <!-- Custom CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Datatables CSS-->
+    <link rel="stylesheet" href="../dist/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../dist/css/buttons.dataTables.min.css">
 
 
 
@@ -161,12 +163,34 @@
 
                 <div class="panel-body">
                         <p>
-                            <button type="button" class="btn btn-outline btn-info">Add Enforcer</button>
+                            <button type="button" class="btn btn-outline btn-info"  data-toggle="modal" data-target="#vpModal">Add Violation and Penalty</button>
                         </p>
+                <!-- start modal -->
+                <!-- Modal -->
+                <div class="modal fade" id="vpModal" tabindex="-1" role="dialog" aria-labelledby="vpModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="vpModalLabel">Add Violation and Penalty</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                            ...
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- endmodal -->
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
-                            <table class="table table-hover table-striped table-bordered">
+                            <table class="table table-hover table-striped table-bordered" id="example" width="100%">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -245,15 +269,29 @@
     <!-- Metis Menu Plugin JavaScript -->
     <script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
-    <!-- Morris Charts JavaScript -->
-    <script src="../vendor/raphael/raphael.min.js"></script>
-    <script src="../vendor/morrisjs/morris.min.js"></script>
-    <script src="../data/morris-data.js"></script>
-
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
-    <script src="../js/angular-route.js"></script>
-    <script src="../js/angular.min.js"></script>
+
+     <!-- Datatable JavaScript -->
+     <script src="../JS/jquery.dataTables.min.js"></script>
+     <script src="../JS/dataTables.buttons.min.js"></script>
+     <script src="../JS/buttons.print.min.js"></script>
+     <script src="../JS/buttons.flash.min.js"></script>
+     <script src="../JS/buttons.html5.min.js"></script>
+     <script src="../JS/jszip.min.js"></script>
+     <script src="../JS/pdfmake.min.js"></script>
+     <script src="../JS/vfs_fonts.js"></script>
+     <script type="text/javascript">
+         $(document).ready(function () {
+             $('#example').DataTable({
+                 "pageLength": 20,
+                 dom: 'Bfrtip',
+                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+             });
+         });
+     </script>
+ 
+
 
 </body>
 
