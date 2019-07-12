@@ -5,6 +5,23 @@ require_once 'dbhelper/dbhelper.php';
 Class Enforcer extends DBHelper{
     private $table = 'enforcer';
     private $fields = array(
+        'enforcer_img',
+        'enforcer_lname',
+        'enforcer_fname',
+        'enforcer_mi',
+        'enforcer_addressProv',
+        'enforcer_addressCity',
+        'enforcer_mobile',
+        'enforcer_tel',
+        'enforcer_gender',
+        'enforcer_email',
+        'enforcer_password',
+        'enforcer_status',
+        'enforcer_type',
+        'enforcer_birthdate',
+        'agency_id'
+    );
+    private $fieldss = array(
         'enforcer_lname',
         'enforcer_fname',
         'enforcer_mi',
@@ -48,6 +65,10 @@ Class Enforcer extends DBHelper{
       function updateEnforcer($data){
          return DBHelper::updateRecord($data,$this->fields,$this->table,'enforcer_id'); 
       }
+
+      function updateEnforcers($data){
+        return DBHelper::updateRecord($data,$this->fieldss,$this->table,'enforcer_id'); 
+     }
  
       function deleteEnforcer($ref_id){
           return DBHelper::deleteRecord($this->table,'enforcer_id',$ref_id);

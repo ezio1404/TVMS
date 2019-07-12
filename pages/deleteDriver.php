@@ -3,5 +3,5 @@
     $driver = new Driver();
     $id = $_GET['id'];
     $driver->deleteDriver(array($id));
-    header("location:driver.php");
+    //header("location:driver.php");
 ?>

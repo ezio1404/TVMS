@@ -14,10 +14,7 @@ Class Agency extends DBHelper{
         'agency_tel1',
         'agency_tel2',
         'agency_status',
-        'agency_subStartDate',
-        'agency_subExpiryDate',
-        'agency_subFee',
-        'agency_subStatus'
+        'agency_sub'
     );
     
     private $edit = array(
@@ -30,6 +27,17 @@ Class Agency extends DBHelper{
         'agency_tel2'
     );
 
+    private $table2 = 'subscription';
+    private $sub = array(
+        'sub_codeImg',
+        'sub_senderName',
+        'sub_code',
+        'agency_id',
+        'sub_start',
+        'sub_expire',
+        'sub_fee'
+    );
+
     function __construct(){
         return DBHelper::__construct();
     }
@@ -37,7 +45,7 @@ Class Agency extends DBHelper{
 	/* function getUsers($id){
         return DBHelper::getAll($id); 
      } */
-     function getEnforcers(){
+     function getAgency(){
          return DBHelper::getAll($this->table);
      }
 
@@ -53,6 +61,10 @@ Class Agency extends DBHelper{
      function addAgency($data){
          return DBHelper::addRecord($data,$this->fields,$this->table); 
      }
+
+     function addSub($data){
+        return DBHelper::addSubs($data,$this->sub,$this->table2); 
+    }
  
       function updateAgency($data){
          return DBHelper::updateRecord($data,$this->edit,$this->table,'agency_id');
@@ -63,7 +75,7 @@ Class Agency extends DBHelper{
       }
 
       function stats($status,$id){
-          return DBHelper::status($status,$id);
+          return DBHelper::agencyStatus($status,$id);
       }
 
       function agencyLogin($username,$password){

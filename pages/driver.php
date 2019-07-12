@@ -18,7 +18,17 @@
         $type = $_POST['type'];
         $bday = $_POST['bday'];
         $status = 'Active';
-        $driver->addDriver(array($license,$pin,$lname,$fname,$mi,$gender,$bday,$p,$c,$mobile,$tel,$type,$email,$password,$status));
+        $image = "image/".$_FILES['image']['name'];
+        $imageType = strtolower(pathinfo($image,PATHINFO_EXTENSION));
+        $checkimage = getimagesize($_FILES['image']['tmp_name']);
+        if($checkimage !== false){
+            if($imageType != "jpg" && $imageType != "png" && $imageType != "jpeg" && $imageType != "gif"){
+
+            }else{
+                move_uploaded_file($_FILES['image']['tmp_name'],$image);
+                $driver->addDriver(array($license,$pin,$image,$lname,$fname,$mi,$gender,$bday,$p,$c,$mobile,$tel,$type,$email,$password,$status));
+            }
+        }
       }
 
       if(isset($_POST['edit'])){
@@ -38,7 +48,23 @@
         $bday = $_POST['bday'];
         $status = $_POST['status'];
         $id = $_POST['id'];
-        $driver->updateDriver(array($license,$pin,$lname,$fname,$mi,$gender,$bday,$p,$c,$mobile,$tel,$type,$email,$password,$status,$id));
+        $image = "image/".$_FILES['image']['name'];
+        if(!empty($_FILES['image']['tmp_name'])){
+            $imageType = strtolower(pathinfo($image,PATHINFO_EXTENSION));
+            $checkimage = getimagesize($_FILES['image']['tmp_name']);
+            if($checkimage !== false){
+                if($imageType != "jpg" && $imageType != "png" && $imageType != "jpeg" && $imageType != "gif"){
+
+                }else{
+                    move_uploaded_file($_FILES['image']['tmp_name'],$image);
+                    $driver->updateDriver(array($license,$pin,$image,$lname,$fname,$mi,$gender,$bday,$p,$c,$mobile,$tel,$type,$email,$password,$status,$id));
+                }
+            }
+        }else{
+            $driver->updateDrivers(array($license,$pin,$lname,$fname,$mi,$gender,$bday,$p,$c,$mobile,$tel,$type,$email,$password,$status,$id));
+        }
+
+        
       }
     }
     else{
@@ -109,7 +135,11 @@
                         <h5 class="modal-title" id="enforcerModalLabel">Add Driver</h5>
                         </div>
                         <div class="modal-body">
-                        <form method = 'POST'>
+                        <form method = 'POST' enctype="multipart/form-data">
+                            <div class="form-group text-center">
+                            <label class="hover" for="image">
+                            <img src="image/blank.png" id="preview" data-tooltip="true" title="Upload service image" data-animation="false" alt="Driver image" style="width:200px;height:200px" ><br>
+                            </label><input type="file" name="image" onchange="loadImage(event)" style="visibility:hidden" id="image"></div>
                             <input type="number" name="license" class="form-control" placeholder="License ID" required autofocus><br>
                             <input type="number" name="pincode" class="form-control" placeholder="Driver Pincode" required autofocus><br>
                             <input type="text" name="fname" class="form-control" placeholder="Firstname" required autofocus><br>
@@ -206,7 +236,11 @@
                         <h5 class="modal-title" id="enforcerModalLabel">Edit Driver</h5>
                         </div>
                         <div class="modal-body">
-                        <form method = 'POST'>
+                        <form method = 'POST' enctype="multipart/form-data">
+                        <div class="form-group text-center">
+                            <label class="hover" for="image<?php echo $datas['driver_id'] ?>">
+                            <img src="<?php echo $datas['driver_img'] ?>" id="editPreview<?php echo $datas['driver_id'] ?>" data-tooltip="true" title="Upload service image" data-animation="false" alt="Driver image" style="width:200px;height:200px" ><br>
+                            </label><input type="file" name="image" onchange="loadEditedImage('<?php echo $datas['driver_id'] ?>')" style="visibility:hidden" id="image<?php echo $datas['driver_id'] ?>"></div>
                             <input type="hidden" name="id" class="form-control"  value="<?php echo $datas['driver_id'] ?>" require autofocus><br>
                             <input type="number" name="license" class="form-control" value="<?php echo $datas['license_id'] ?>" required autofocus><br>
                             <input type="number" name="pincode" class="form-control" value="<?php echo $datas['driver_pincode'] ?>" required autofocus><br>
@@ -238,6 +272,7 @@
                                 <?php
                                     }else{
                                 ?>
+                                <option value='Bus' >Bus</option>
                                 <option value='Jeep' >Jeep</option>
                                 <option value='Taxi' >Taxi</option>
                                 <?php
@@ -257,7 +292,7 @@
                 </div>
                 <div class="modal fade" id="view<?php echo $datas['driver_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="enforcerModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                    <div class="modal-content" style="width:50%">
+                    <div class="modal-content" style="width:70%">
                         <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -266,6 +301,9 @@
                         </div>
                         <div class="modal-body">
                         <form method = 'POST'>
+                            <div class="form-group text-center">
+                                <img src="<?php echo $datas['driver_img'] ?>" data-tooltip="true" title="View service image" data-animation="false" alt="Driver image" style="width:200px;height:200px" ><br>
+                            </div>        
                             <p>ID: <?php echo $datas['driver_id'] ?></p><br>
                             <p>Name: <?php echo $datas['driver_fname'].' '.$datas['driver_mi'].'. '.$datas['driver_lname']?></p><br>
                             <p>Provincial Address: <?php echo $datas['driver_addressProv'] ?></p><br>
@@ -342,10 +380,23 @@
              if(conf)
                 window.location=anchor.attr("href");
          }
+
+         function loadImage(){
+             var loadImg = document.getElementById('preview');
+             loadImg.src = URL.createObjectURL(event.target.files[0]);
+         }
+
+         function loadEditedImage(id){
+            var loadImg = document.getElementById('editPreview'+id);
+            loadImg.src = URL.createObjectURL(event.target.files[0]);
+         }
+
      </script>
- 
-
-
+     <script>
+        $(document).ready(function(){
+            $("[data-toggle='true']").tooltip(); 
+        });
+     </script>
 </body>
 
 </html>

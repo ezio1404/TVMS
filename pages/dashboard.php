@@ -101,11 +101,11 @@
                             <iframe src="https://embed.waze.com/iframe?zoom=14&lat=10.298&lon=123.897&pin=1&desc=1"
                         width="100%" height="550"></iframe>
                 </div>
-                
-                          
                 <div id="Paris" class="tabcontent">
-                        <h3>Paris</h3>
-                        <p>Paris is the capital of France.</p> 
+                <button onclick="print('print_div')">Print</button>
+                      <div id="print_div">
+                        <canvas id="chart" style="width: 100%; height: 65vh; margin-top: 10px;"></canvas>
+                      </div>                      
                 </div>
                 <!--  -->
             </div>
@@ -121,7 +121,8 @@
 
     <!-- jQuery -->
     <script src="../vendor/jquery/jquery.min.js"></script>
-
+    <script src="../vendor/jquery/jQuery.print.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
@@ -135,6 +136,16 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
+
+    <!-- Datatable JavaScript -->
+    <script src="../JS/jquery.dataTables.min.js"></script>
+     <script src="../JS/dataTables.buttons.min.js"></script>
+     <script src="../JS/buttons.print.min.js"></script>
+     <script src="../JS/buttons.flash.min.js"></script>
+     <script src="../JS/buttons.html5.min.js"></script>
+     <script src="../JS/jszip.min.js"></script>
+     <script src="../JS/pdfmake.min.js"></script>
+     <script src="../JS/vfs_fonts.js"></script>
     <script>
         var d = new Date();
         document.getElementById("demo").innerHTML = d;
@@ -154,11 +165,48 @@
                   evt.currentTarget.className += " active";
                 }
                 // Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
+                document.getElementById("defaultOpen").click();
                 </script>
-                   
-        
-   
+        <script>
+				var ctx = document.getElementById("chart").getContext('2d');
+    			var myChart = new Chart(ctx, {
+        		type: 'bar',
+		        data: {
+		            labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+		            datasets: 
+		            [{
+		                label: 'Sales',
+		                data: [1,2,3,4,5,6,7,8,9,3,4,3],
+		                backgroundColor: '#87CEFA',
+		                borderColor:'#87CEFA',
+		                borderWidth: 3
+		            },
+
+		            {
+		            	label: 'Users',
+		                data: [9,8,7,6,5,4,3,2,1.5,5.5,8.5,6.5],
+		                backgroundColor: '#1E90FF',
+		                borderColor:'#1E90FF',
+		                borderWidth: 3	
+		            }]
+		        },
+		     
+		        options: {
+		            scales: {scales:{yAxes: [{beginAtZero: false}], xAxes: [{autoskip: true, maxTicketsLimit: 20}]}},
+		            tooltips:{mode: 'index'},
+		            legend:{display: true, position: 'top', labels: {fontColor: 'black', fontSize: 16}}
+		        }
+		    });
+			</script>
+      <script>
+        // here we will write our custom code for printing our div
+        $(function(){
+            $('#print').on('click', function() {
+                //Print ele2 with default options
+                $.print(".print_div");
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -11,7 +11,6 @@
             $status = 'Active';
             $id = $_POST['id'];
             $license->addLicense(array($id,$type,$res,$issue,$exp,$national,$status));
-            
         }
 
         if(isset($_POST['edit'])){
@@ -22,7 +21,8 @@
             $national = $_POST['national'];
             $status = $_POST['status'];
             $id = $_POST['id'];
-            $license->updateLicense(array($id,$type,$res,$issue,$exp,$national,$status,$id));
+            $new = $_POST['new'];
+            $license->updateLicense(array($new,$type,$res,$issue,$exp,$national,$status,$id));
         }
     }
     else{
@@ -96,7 +96,13 @@
                             <div class="modal-body">
                         <form method = 'POST'>
                             <input type="number" name="id" class="form-control" placeholder="License ID" required autofocus><br>
-                            <input type="text" name="type" class="form-control" placeholder="License Type" required autofocus><br>
+                            <!--<input type="text" name="type" class="form-control" placeholder="License Type" required autofocus><br>-->
+                            <select name="type" class="form-control">
+                                <option selected disabled>License type</option>
+                                <option value="Student">Student</option>
+                                <option value="Professional">Professional</option>
+                                <option value="Non-professional">Non-professional</option>
+                            </select><br>
                             <input type="text" name="res" class="form-control" placeholder="License Restriction" required autofocus><br>
                             <p>Date Issued</p>
                             <input type="date" name="issue" class="form-control" required autofocus><br>
@@ -143,14 +149,14 @@
                                         <td><?php echo $datas['license_exp_date'] ?></td>
                                         <td><?php echo $datas['license_status'] ?></td>
                                         <td> 
-                                            <a href="#edit<?php echo $datas['license_id'] ?>" data-toggle="modal"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                                            <a onclick='javascript:confirmation($(this));return false;' href="deleteLicense.php?id=<?php echo $datas['license_id'] ?>"> <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i> </a> 
+                                            <a href="#edit<?php echo $datas['license_id'] ?>" data-toggle="modal" style="text-decoration:none"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                            <a onclick='javascript:confirmation($(this));return false;' href="deleteLicense.php?id=<?php echo $datas['license_id'] ?>" style="text-decoration:none"> <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i> </a> 
                                             <?php if($datas['license_status'] == 'Active'){ ?>
-                                            <a onclick='javascript:status($(this));return false;' href="licenseStatus.php?status=<?php echo $datas['license_status']?>&id=<?php echo $datas['license_id'] ?>"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></a> 
+                                            <a onclick='javascript:status($(this));return false;' href="licenseStatus.php?status=<?php echo $datas['license_status']?>&id=<?php echo $datas['license_id'] ?>" style="text-decoration:none"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></a> 
                                             <?php }
                                                 else{
                                             ?>
-                                            <a onclick='javascript:status($(this));return false;' href="licenseStatus.php?status=<?php echo $datas['license_status']?>&id=<?php echo $datas['license_id'] ?>"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></a> 
+                                            <a onclick='javascript:status($(this));return false;' href="licenseStatus.php?status=<?php echo $datas['license_status']?>&id=<?php echo $datas['license_id'] ?>" style="text-decoration:none"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></a> 
                                             <?php } ?>
                                         </td>
                                     </tr>
@@ -179,14 +185,19 @@
                         </div>
                         <div class="modal-body">
                         <form method = 'POST'>
-                            <input type="hidden" name="id" class="form-control" value="<?php echo $datas['license_id'] ?>" required autofocus>
                             <input type="hidden" name="status" class="form-control" value="<?php echo $datas['license_status'] ?>" required autofocus>
+                            <input type="hidden" name="id" class="form-control" value="<?php echo $datas['license_id'] ?>" required autofocus>
+                            <p>License ID</p>
+                            <input type="text" name="new" class="form-control" value="<?php echo $datas['license_id'] ?>" required autofocus><br>
+                            <p>Type</p>
                             <input type="text" name="type" class="form-control" value="<?php echo $datas['license_type'] ?>" required autofocus><br>
+                            <p>Restriction</p>
                             <input type="text" name="res" class="form-control" value="<?php echo $datas['license_restriction'] ?>" required autofocus><br>
                             <p>Date Issued</p>
                             <input type="date" name="issue" class="form-control"  value="<?php echo $datas['license_issue_date'] ?>" required autofocus><br>
                             <p>Expiration Date</p>
                             <input type="date" name="exp" class="form-control" value="<?php echo $datas['license_exp_date'] ?>" required autofocus><br>
+                            <p>Nationality</p>
                             <input type="text" name="national" class="form-control" value="<?php echo $datas['license_nationality'] ?>" required autofocus><br>
                         </div>
                         <div class="modal-footer">

@@ -67,9 +67,14 @@ Class DBHelper{
         $count = $stmt->rowCount();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         if($count > 0){
-            echo "<script> window.location='../pages/dashboard.php'; </script>";
-            $_SESSION['id'] = $data['agency_id'];
-            $_SESSION['head'] = $data['agency_head'];
+            if($data['agency_sub'] == 0){
+                $_SESSION['pay'] = $data['agency_id'];
+                echo "<script> window.location='../pages/payment.php'; </script>";
+            }else{
+                echo "<script> window.location='../pages/dashboard.php'; </script>";
+                $_SESSION['id'] = $data['agency_id'];
+                $_SESSION['head'] = $data['agency_head'];
+            }
         }
         else{
             echo "<script> window.location='../pages/index.php'; </script>";
@@ -83,7 +88,14 @@ Class DBHelper{
         $values = implode(",",$val);
         $sql = "UPDATE $table SET $values WHERE $field_id = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute($data);
+        $ok = $stmt->execute($data);
+        if($ok){
+            echo "<script> confirm('Updated Successfuly!') </script>";
+            echo "<script> window.location='../pages/$table.php?m=Success!'; </script>";
+        }else{
+            echo "<script> confirm('Updating Failed!') </script>";
+            echo "<script> window.location='../pages/$table.php?m=Error!'; </script>";
+        }
     }
     function addRecord($data,$fields,$table){
         $flds = implode(",",$fields);
@@ -93,14 +105,45 @@ Class DBHelper{
         $values = implode(",",$val);
         $sql = "INSERT INTO $table($flds) VALUES($values)";
         $stmt = $this->conn->prepare($sql);
-       $ok= $stmt->execute($data);
-        
+        $ok= $stmt->execute($data);
+        if($ok){
+            echo "<script> confirm('Successfuly Added!') </script>";
+            echo "<script> window.location='../pages/$table.php?m=Success!'; </script>";
+        }else{
+            echo "<script> confirm('Adding Failed!') </script>";
+            echo "<script> window.location='../pages/$table.php?m=Error!'; </script>";
+        }
+    }
+
+    function addSubs($data,$fields,$table){
+        $flds = implode(",",$fields);
+        $val = array();
+        foreach($data as $d)
+        $val[] = "?";
+        $values = implode(",",$val);
+        $sql = "INSERT INTO $table($flds) VALUES($values)";
+        $stmt = $this->conn->prepare($sql);
+        $ok = $stmt->execute($data);
+        if($ok){
+            echo "<script> confirm('Subscription success! Thank you!') </script>";
+            echo "<script> window.location='../pages/index.php?m=Success!'; </script>";
+        }else{
+            echo "<script> confirm('Failed to add subscription!') </script>";
+            echo "<script> window.location='../pages/payment.php?m=Error!'; </script>";
+        }
     }
 
     function deleteRecord($table,$field_id,$ref_id){
         $sql = "DELETE FROM $table WHERE $field_id = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute($ref_id);
+        $ok = $stmt->execute($ref_id);
+        if($ok){
+            echo "<script> confirm('Deleted Successfuly!') </script>";
+            echo "<script> window.location='../pages/$table.php?m=Success!'; </script>";
+        }else{
+            echo "<script> confirm('Deleting Failed!') </script>";
+            echo "<script> window.location='../pages/$table.php?m=Error!'; </script>";
+        }
     }
 
     function status($status,$id){
@@ -111,6 +154,12 @@ Class DBHelper{
 
     function driverStatus($status,$id){
         $sql = "UPDATE driver SET driver_status = ? WHERE driver_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(array($status,$id));
+    }
+
+    function agencyStatus($status,$id){
+        $sql = "UPDATE agency SET agency_status = ? WHERE agency_id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(array($status,$id));
     }

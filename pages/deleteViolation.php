@@ -3,5 +3,5 @@
     $violation = new Violation();
     $id = $_GET['id'];
     $violation->deleteViolation(array($id));
-    header("location:vp.php");
+    //header("location:vp.php");
 ?>

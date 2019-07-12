@@ -17,11 +17,16 @@
             $type = $_POST['type'];
             $date = $_POST['bday'];
             $id = $_SESSION['id'];
-            $ok=$enforcer->addEnforcer(array($lname,$fname,$mi,$addressP,$addressC,$mobile,$tel,$gender,$email,$password,$status,$type,$date,$id));
-            if($ok){
-                echo "<script> alert('Success Adding'); </script>";         
-            }else{
-                echo "<script> alert('Failed Adding'); </script>";
+            $image = "image/".$_FILES['image']['name'];
+            $imageType = strtolower(pathinfo($image,PATHINFO_EXTENSION));
+            $checkimage = getimagesize($_FILES['image']['tmp_name']);
+            if($checkimage !== false){
+                if($imageType != "jpg" && $imageType != "png" && $imageType != "jpeg" && $imageType != "gif"){
+
+                }else{
+                    move_uploaded_file($_FILES['image']['tmp_name'],$image);
+                    $enforcer->addEnforcer(array($image,$lname,$fname,$mi,$addressP,$addressC,$mobile,$tel,$gender,$email,$password,$status,$type,$date,$id));
+                }
             }
         }
         if(isset($_POST['edit'])){
@@ -39,11 +44,20 @@
             $typee = $_POST['typee'];
             $datee = $_POST['bdaye'];
             $id = $_POST['id'];
-            $ok=$enforcer->updateEnforcer(array($lnamee,$fnamee,$mie,$addressPe,$addressCe,$mobilee,$tele,$gendere,$emaile,$password,$statuse,$typee,$datee,$_SESSION['id'],$id));
-            if(!$ok){
-                echo "<script> alert('Success Updating'); </script>";         
+            $image = "image/".$_FILES['image']['name'];
+            if(!empty($_FILES['image']['tmp_name'])){
+                $imageType = strtolower(pathinfo($image,PATHINFO_EXTENSION));
+                $checkimage = getimagesize($_FILES['image']['tmp_name']);
+                if($checkimage !== false){
+                    if($imageType != "jpg" && $imageType != "png" && $imageType != "jpeg" && $imageType != "gif"){
+
+                    }else{
+                        move_uploaded_file($_FILES['image']['tmp_name'],$image);
+                        $enforcer->updateEnforcer(array($image,$lnamee,$fnamee,$mie,$addressPe,$addressCe,$mobilee,$tele,$gendere,$emaile,$password,$statuse,$typee,$datee,$_SESSION['id'],$id));
+                    }
+                }
             }else{
-                echo "<script> alert('Failed Updating'); </script>";
+                $enforcer->updateEnforcers(array($lnamee,$fnamee,$mie,$addressPe,$addressCe,$mobilee,$tele,$gendere,$emaile,$password,$statuse,$typee,$datee,$_SESSION['id'],$id));
             }
         }
     }
@@ -115,26 +129,30 @@
                         <h5 class="modal-title" id="enforcerModalLabel">Add Enforcer</h5>
                         </div>
                         <div class="modal-body">
-                        <form method = 'POST'>
-                            <input type="text" name="fname" class="form-control" placeholder="Firstname" require autofocus><br>
-                            <input type="text" name="lname" class="form-control" placeholder="Lastname" require autofocus><br>
-                            <input type="text" name="mi" class="form-control" placeholder="Middle Initial" require autofocus><br>
-                            <input type="text" name="addressP" class="form-control" placeholder="Provincial Address" require autofocus><br>
-                            <input type="text" name="addressC" class="form-control" placeholder="City Address" require autofocus><br>
-                            <input type="number" name="mobile" class="form-control" placeholder="Mobile No." require autofocus><br>
-                            <input type="number" name="tel" class="form-control" placeholder="Telephone No." require autofocus><br>
+                        <form method = 'POST' enctype="multipart/form-data">
+                            <div class="form-group text-center">
+                            <label class="hover" for="image">
+                            <img src="image/blank.png" id="preview" data-tooltip="true" title="Upload service image" data-animation="false" alt="Driver image" style="width:200px;height:200px" ><br>
+                            </label><input type="file" name="image" onchange="loadImage(event)" style="visibility:hidden" id="image"></div>
+                            <input type="text" name="fname" class="form-control" placeholder="Firstname" required autofocus><br>
+                            <input type="text" name="lname" class="form-control" placeholder="Lastname" required autofocus><br>
+                            <input type="text" name="mi" class="form-control" placeholder="Middle Initial" required autofocus><br>
+                            <input type="text" name="addressP" class="form-control" placeholder="Provincial Address" required autofocus><br>
+                            <input type="text" name="addressC" class="form-control" placeholder="City Address" required autofocus><br>
+                            <input type="number" name="mobile" class="form-control" placeholder="Mobile No." required autofocus><br>
+                            <input type="text" name="tel" class="form-control" placeholder="Telephone No." required autofocus><br>
                             <p>Gender</p>
-                            <input type="radio" checked="true" name="gender" class="text-center" value="Male" require autofocus>&nbsp&nbsp Male &nbsp&nbsp&nbsp
-                            <input type="radio" name="gender" class="text-center" value="Female" require autofocus>&nbsp&nbsp Female<br><br>
-                            <input type="email" name="email" class="form-control" placeholder="Email" require autofocus><br>
+                            <input type="radio" name="gender" class="text-center" value="Male" required autofocus>&nbsp&nbsp Male &nbsp&nbsp&nbsp
+                            <input type="radio" name="gender" class="text-center" value="Female" autofocus>&nbsp&nbsp Female<br><br>
+                            <input type="email" name="email" class="form-control" placeholder="Email" required autofocus><br>
                             <!-- <input type="password" name="password" class="form-control" placeholder="Password" require autofocus><br> --> 
-                            <select name="type" class="form-control" placeholder="Type" require autofocus>
-                                <option value='null' disabled selected>Type</option>
+                            <select name="type" class="form-control" placeholder="Type" required autofocus>
+                                <option value='' disabled selected>Type</option>
                                 <option value='Traffic' >Traffic</option>
                                 <option value='Parking' >Parking</option>
                             </select><br>
                             <p>Birthdate</p>
-                            <input type="date" name="bday" class="form-control" require autofocus><br>
+                            <input type="date" name="bday" class="form-control" required autofocus><br>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -204,22 +222,35 @@
                         <h5 class="modal-title" id="enforcerModalLabel">Edit Enforcer</h5>
                         </div>
                         <div class="modal-body">
-                        <form method = 'POST'>
+                        <form method = 'POST' enctype="multipart/form-data">
+                        <div class="form-group text-center">
+                            <label class="hover" for="image<?php echo $datas['enforcer_id'] ?>">
+                            <img src="<?php echo $datas['enforcer_img'] ?>" id="editPreview<?php echo $datas['enforcer_id'] ?>" data-tooltip="true" title="Upload service image" data-animation="false" alt="Driver image" style="width:200px;height:200px" ><br>
+                            </label><input type="file" name="image" onchange="loadEditedImage('<?php echo $datas['enforcer_id'] ?>')" style="visibility:hidden" id="image<?php echo $datas['enforcer_id'] ?>" value="<?php echo $datas['enforcer_img'] ?>"></div>
                             <input type="hidden" name="id" class="form-control"  value="<?php echo $datas['enforcer_id'] ?>" require autofocus><br>
-                            <input type="text" name="fnamee" class="form-control"  value="<?php echo $datas['enforcer_fname'] ?>" require autofocus><br>
-                            <input type="text" name="lnamee" class="form-control" value="<?php echo $datas['enforcer_lname'] ?>" require autofocus><br>
-                            <input type="text" name="mie" class="form-control" value="<?php echo $datas['enforcer_mi'] ?>" require autofocus><br>
-                            <input type="text" name="addressPe" class="form-control" value="<?php echo $datas['enforcer_addressProv'] ?>" require autofocus><br>
-                            <input type="text" name="addressCe" class="form-control" value="<?php echo $datas['enforcer_addressCity'] ?>" require autofocus><br>
-                            <input type="number" name="mobilee" class="form-control" value="<?php echo $datas['enforcer_mobile'] ?>" require autofocus><br>
-                            <input type="number" name="tele" class="form-control" value="<?php echo $datas['enforcer_tel'] ?>" require autofocus><br>
+                            <p>Firstname</p>
+                            <input type="text" name="fnamee" class="form-control"  value="<?php echo $datas['enforcer_fname'] ?>" required autofocus><br>
+                            <p>Lastname</p>
+                            <input type="text" name="lnamee" class="form-control" value="<?php echo $datas['enforcer_lname'] ?>" required autofocus><br>
+                            <p>Middle name</p>
+                            <input type="text" name="mie" class="form-control" value="<?php echo $datas['enforcer_mi'] ?>" required autofocus><br>
+                            <p>Provincial Address</p>
+                            <input type="text" name="addressPe" class="form-control" value="<?php echo $datas['enforcer_addressProv'] ?>" required autofocus><br>
+                            <p>City Address</p>
+                            <input type="text" name="addressCe" class="form-control" value="<?php echo $datas['enforcer_addressCity'] ?>" required autofocus><br>
+                            <p>Mobile No.</p>
+                            <input type="number" name="mobilee" class="form-control" value="<?php echo $datas['enforcer_mobile'] ?>" required autofocus><br>
+                            <p>Telephone No.</p>
+                            <input type="number" name="tele" class="form-control" value="<?php echo $datas['enforcer_tel'] ?>" required autofocus><br>
                             <p>Gender</p>
-                            <input type="radio" name="gendere" class="text-center" value="Male" <?php echo ($datas['enforcer_gender'] == 'Male')?'checked':'' ?> require autofocus>&nbsp&nbsp Male &nbsp&nbsp&nbsp
-                            <input type="radio" name="gendere" class="text-center" value="Female" <?php echo ($datas['enforcer_gender'] == 'Female')?'checked':'' ?> require autofocus>&nbsp&nbsp Female<br><br>
-                            <input type="email" name="emaile" class="form-control" value="<?php echo $datas['enforcer_email'] ?>" require autofocus>
-                            <input type="hidden" name="password" class="form-control" value="<?php echo $datas['enforcer_password'] ?>" require autofocus><br>
-                            <input type="hidden" name="statuse" class="form-control" value="<?php echo $datas['enforcer_status'] ?>" require autofocus><br>
-                            <select name="typee" class="form-control" require autofocus>
+                            <input type="radio" name="gendere" class="text-center" value="Male" <?php echo ($datas['enforcer_gender'] == 'Male')?'checked':'' ?> required autofocus>&nbsp&nbsp Male &nbsp&nbsp&nbsp
+                            <input type="radio" name="gendere" class="text-center" value="Female" <?php echo ($datas['enforcer_gender'] == 'Female')?'checked':'' ?> autofocus>&nbsp&nbsp Female<br><br>
+                            <p>Email</p>
+                            <input type="email" name="emaile" class="form-control" value="<?php echo $datas['enforcer_email'] ?>" required autofocus><br>
+                            <input type="hidden" name="password" class="form-control" value="<?php echo $datas['enforcer_password'] ?>" autofocus>
+                            <input type="hidden" name="statuse" class="form-control" value="<?php echo $datas['enforcer_status'] ?>" autofocus>
+                            <p>Type</p>
+                            <select name="typee" class="form-control" required autofocus>
                                 <option value="<?php echo $datas['enforcer_type'] ?>" selected><?php echo $datas['enforcer_type'] ?></option>
                                 <?php
                                     if($datas['enforcer_type'] == 'Parking'){
@@ -233,7 +264,7 @@
                                     <?php } ?>
                             </select><br>
                             <p>Birthdate</p>
-                            <input type="date" name="bdaye" class="form-control" value="<?php echo $datas['enforcer_birthdate'] ?>" require autofocus><br>
+                            <input type="date" name="bdaye" class="form-control" value="<?php echo $datas['enforcer_birthdate'] ?>" required autofocus><br>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -247,7 +278,7 @@
                 <!-- Modal -->
             <div class="modal fade" id="view<?php echo $datas['enforcer_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="enforcerModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                    <div class="modal-content" style="width:50%">
+                    <div class="modal-content" style="width:70%">
                         <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -256,6 +287,9 @@
                         </div>
                         <div class="modal-body">
                         <form method = 'POST'>
+                            <div class="form-group text-center">
+                                <img src="<?php echo $datas['enforcer_img'] ?>" data-tooltip="true" title="View service image" data-animation="false" alt="Driver image" style="width:200px;height:200px" ><br>
+                            </div>        
                             <p>ID: <?php echo $datas['enforcer_id'] ?></p><br>
                             <p>Name: <?php echo $datas['enforcer_fname'].' '.$datas['enforcer_mi'].'. '.$datas['enforcer_lname']?></p><br>
                             <p>Provincial Address: <?php echo $datas['enforcer_addressProv'] ?></p><br>
@@ -332,8 +366,21 @@
              if(conf)
                 window.location=anchor.attr("href");
          }
+         function loadImage(){
+             var loadImg = document.getElementById('preview');
+             loadImg.src = URL.createObjectURL(event.target.files[0]);
+         }
+
+         function loadEditedImage(id){
+            var loadImg = document.getElementById('editPreview'+id);
+            loadImg.src = URL.createObjectURL(event.target.files[0]);
+         }
      </script>
- 
+        <script>
+            $(document).ready(function(){
+                $("[data-toggle='true']").tooltip(); 
+            });
+        </script>
 
 
 </body>

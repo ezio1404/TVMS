@@ -19,7 +19,7 @@
 <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
 
 <!-- Custom Fonts -->
-<link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+ <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <div id="wrapper">
 
 <!-- Navigation -->
@@ -31,7 +31,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="dashboard.php">TVMS AGENCY</a>
+        <a class="navbar-brand" href="dashboard.php"><img src="image/2as.png" style="width:12%"></a>
     </div>
     <!-- /.navbar-header -->
 
@@ -93,13 +93,8 @@
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
                 <li class="sidebar-search">
-                    <div class="input-group custom-search-form">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
+                    <div class="text-center">
+                        <h4><p>Agency</p></h4>
                     </div>
                     <!-- /input-group -->
                 </li>
@@ -107,27 +102,30 @@
                     <a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
                 <li>
-                            <a href="enforcer.php">Enforcer</a>
+                            <a href="enforcer.php"><i class="fa fa-user fa-fw"></i> Enforcer</a>
                         </li>
                         <li>
-                            <a href="driver.php">Driver</a>
+                            <a href="driver.php"><i class="fa fa-users fa-fw"></i> Driver</a>
                         </li>
                         <li>
-                            <a href="vp.php">Violations and Penalties</a>
+                            <a href="violation.php"><i class="fa fa-exclamation-triangle fa-fw"></i> Violations and Penalties</a>
                         </li>
                         <li>
-                            <a href="violators.php">Violator</a>
+                            <a href="violators.php"><i class="fa fa-user-times fa-fw"></i> Violator</a>
                         </li>
                         <li>
-                            <a href="license.php">License</a>
+                            <a href="license.php"><i class="fa fa-credit-card fa-fw"></i> License</a>
                         </li>
                         <li>
-                            <a href="vehicles.php">Vehicle</a>
+                            <a href="vehicle.php"><i class="fa fa-car fa-fw"></i> Vehicle</a>
                         </li>
                         <li>
+                            <a href="adds.php"><i class="fa fa-user-plus fa-fw"></i> Driver New Entries</a>
+                        </li>
+                        <!--<li>
                             <a href="vdrivers.php">Vehicle Drivers</a>
                         </li>
-   <!--             <li>
+                    <li>
                     <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Manage<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>

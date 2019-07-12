@@ -7,6 +7,24 @@ Class Driver extends DBHelper{
     private $fields = array(
         'license_id',
         'driver_pincode',
+        'driver_img',
+        'driver_lname',
+        'driver_fname',
+        'driver_mi',
+        'driver_gender',
+        'driver_birthdate',
+        'driver_addressProv',
+        'driver_addressCity',
+        'driver_mobile',
+        'driver_tel',
+        'driver_type',
+        'driver_email',
+        'driver_password',
+        'driver_status'
+    );
+    private $fieldss = array(
+        'license_id',
+        'driver_pincode',
         'driver_lname',
         'driver_fname',
         'driver_mi',
@@ -49,6 +67,10 @@ Class Driver extends DBHelper{
       function updateDriver($data){
          return DBHelper::updateRecord($data,$this->fields,$this->table,'driver_id'); 
       }
+
+      function updateDrivers($data){
+        return DBHelper::updateRecord($data,$this->fieldss,$this->table,'driver_id'); 
+     }
  
       function deleteDriver($ref_id){
           return DBHelper::deleteRecord($this->table,'driver_id',$ref_id);
